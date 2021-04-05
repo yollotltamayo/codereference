@@ -1,0 +1,64 @@
+.container {
+    display:flex;
+    /*border: 10px #000 dashed;*/
+    /*grid-template-areas:*/
+    /*' Preview Real';*/
+    flex-direction:row;
+    padding:0;
+    margin:10px 10px;
+    height:100%!important;
+      /*grid-template-columns: 1fr 1fr;*/
+    justify-content:space-evenly;
+    overflow:hidden;
+}
+.area1 {
+    /*flex-basis:100%;*/
+    /*margin:0;*/
+    /*[>max-width:100%!important;<]*/
+    /*min-height:300px;*/
+    /*border-radius: 10px;*/
+
+    background: lightpink;
+    min-width: 200px;
+    width: 400px;
+    width:100%;
+    box-sizing: border-box;
+    /*text-align: center;*/
+    flex-grow: 1;
+}
+.CodeMirror{
+    height:80vh!important;
+}
+.Handler {
+    ursor: ew-resize;
+    width: 10px;
+    height: 100px;
+    margin: 0px -5px;
+    background: lightblue;
+    border: 2px solid gray;
+    border-radius: 2px;
+    text-align: center;
+    z-index: 99999;
+    overflow: hidden;
+    display: flex;
+    align-items: center ;
+}
+
+@media only screen and (max-width:800px){
+    .react-codemirror2{
+        height:40vh!important;
+    }
+    .container{
+        flex-direction:column;
+        justify-content:space-between;
+        height:100%;
+    }
+    .area1 {
+        min-height: 200px;
+        height: 100px;
+        height:100%;
+        box-sizing: border-box;
+        flex-grow: 1;
+    }
+}
+

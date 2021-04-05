@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');
+
+/*body {*/
+    /*padding: 0;*/
+    /*margin: 0;*/
+    /*color: white;*/
+    /*font-family: 'DM Mono', monospace;*/
+/*}*/
+
+a {
+    text-decoration: none;
+}
+
+.card-list {
+    display: flex;
+    padding: 3rem;
+    overflow-x: scroll;
+}
+.card {
+    gap: 10px 20px;
+    margin: 10px;
+}
+.card:hover {
+      box-shadow: 0 0 11px rgba(33,33,33,.2); 
+      background-color: #E0E0E0;
+
+}
+
+
