@@ -18,7 +18,7 @@ pub mod content {
         //#[tokio::main]
         //pub async fn connect(&mut self)->mongodb::error::Result<()>{
         pub fn connect()->Self{
-            let mut client_options ="mongodb+srv://yollotl:%23Searsmeentiende2@cluster-1.qo9uf.mongodb.net/Reference?retryWrites=true&w=majority";
+            let mut client_options =SECRETS;
 
             Self{
                   client: Client::with_uri_str(client_options).unwrap()
