@@ -28,7 +28,7 @@ const Fusion = () =>{
                 <Route path="/login">
                     <Login/>
                 </Route>
-                <Route path="/app">
+                <Route path="/">
                     <App />
                 </Route>
             </Switch>

@@ -2,8 +2,11 @@
 use serde::{Serialize, Deserialize};
 #[macro_use] extern crate rocket;
 use rocket_contrib::json::Json;
+use rocket_contrib::serve::{StaticFiles, Options};
 use mongodb::{bson::doc, options::ClientOptions, sync::Client};
+use rocket::response::NamedFile;
 pub mod content {
+    use std::env;
     use mongodb::{bson::doc, options::ClientOptions,sync::Client};
     use serde::{Serialize, Deserialize};
     #[derive(Serialize,Deserialize)]
@@ -18,15 +21,16 @@ pub mod content {
         //#[tokio::main]
         //pub async fn connect(&mut self)->mongodb::error::Result<()>{
         pub fn connect()->Self{
-            let mut client_options =SECRETS;
+            let URI = match env::var("MONGO_URI")  {
+                Ok(val) => val,
+                Err(e) => e.to_string()
+            };
 
             Self{
-                  client: Client::with_uri_str(client_options).unwrap()
+                  client: Client::with_uri_str(&URI).unwrap()
             }
-            //let collection = db.collection("contenido")
-            //Ok(())
         }
-        pub fn inserta(&self, data:Vec<mongodb::bson::Document>) ->mongodb::error::Result<()> {
+        pub fn inserta(&self, data:Vec<mongodb::bson::Document>) ->mongodb::error::Result<()> { // TODO hacer esta funcion asincrona
             let collection = self.client.database("Reference").collection("contenido");
             collection.insert_many(data,None)?;
             Ok(())
@@ -34,12 +38,12 @@ pub mod content {
     }
 }
 #[post("/submit",data="<codigo>")]
-    fn submit(codigo:Json<content::Codigo>) {
+    fn submit(codigo:Json<content::Codigo>) { 
         let conexion = content::Bro::connect();
         let docs = vec![
             doc!{"sku":"12", "autor":"yollotl" ,"codigo":&codigo.content}
         ];
-        conexion.inserta(docs);
+        conexion.inserta(docs); //TODO regresa un json apropiado
     }
 #[get("/")]
     fn code() -> Json<Vec<content::Codigo>>{
@@ -56,6 +60,13 @@ pub mod content {
             ]
         )
     }
+#[get("/")]
+fn index() -> Option<NamedFile> {
+    NamedFile::open("build/index.html").ok()
+}
     fn main()  {
-        rocket::ignite().mount("/api", routes![code,submit]).launch();
+        rocket::ignite()
+            .mount("/",routes![index])
+            .mount("/static", StaticFiles::from("build/static/"))
+            .mount("/api", routes![code,submit]).launch();
     }
