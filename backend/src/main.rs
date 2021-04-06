@@ -64,6 +64,8 @@ pub mod content {
 fn index() -> Option<NamedFile> {
     NamedFile::open("build/index.html").ok()
 }
+// produccion , los archivos se lanzan desde los archivos
+// estaticos del build, el build es lo que genero el frontend. q
     fn main()  {
         rocket::ignite()
             .mount("/",routes![index])
