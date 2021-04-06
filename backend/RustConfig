@@ -1,4 +1,3 @@
 VERSION=nightly
-MONGO_URI="mongodb+srv://yollotl:%23Searsmeentiende2@cluster-1.qo9uf.mongodb.net/sample_airbnb?retryWrites=true&w=majority"
 
 
