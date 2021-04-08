@@ -8,11 +8,10 @@ edition = "2018"
 
 [dependencies]
 rocket = "0.4.7"
-rocket_contrib = {version = "0.4.7"}
-serde = {version="1.0.125", features=["derive"]}
-tokio = { version = "1", features = ["full"] }
-futures = { version = "0.3.4", default-features = false, features = ["async-await"]}
+rocket_contrib = { version = "0.4.7", features = ["json"] }
+serde = { version = "1.0.125", features = ["derive"] }
+
 [dependencies.mongodb]
-version = "1.1.1"
+version = "1.2.1"
 default-features = false
 features = ["sync"]
