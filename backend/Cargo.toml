@@ -7,15 +7,13 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rocket = "0.4.7"
-rocket_contrib = {version = "0.4.7"}
+rocket = { git = "https://github.com/SergioBenitez/Rocket", features = ["secrets"]}
+rocket_contrib = { git = "https://github.com/SergioBenitez/Rocket", features = ["serve"]}
 serde = {version="1.0.125", features=["derive"]}
-tokio = { version = "1", features = ["full"] }
-futures = { version = "0.3.4", default-features = false, features = ["async-await"]}
 reqwest = { version = "0.11", features = ["json"] }
-web-sys= "0.3.50"
 serde_json="1.0.59"
+
 [dependencies.mongodb]
-version = "1.1.1"
+version = "1.2.1"
 default-features = false
-features = ["sync"]
+features = ["tokio-runtime"]
