@@ -4,10 +4,18 @@ import './index.css';
 import App from './App';
 import Fusion from './Fusion';
 import reportWebVitals from './reportWebVitals';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
+      <Router>      
       <Fusion/>
+  </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

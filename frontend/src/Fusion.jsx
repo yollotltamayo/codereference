@@ -5,13 +5,13 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    withRouter
 } from "react-router-dom";
 
 const Fusion = () =>{
     return (
         <>
-            <Router>
                 {/*<ul>
                     <li>
                         <Link to="/login">
@@ -25,14 +25,12 @@ const Fusion = () =>{
                     </li>
                 </ul>*/}
             <Switch>
-                <Route path="/login">
-                    <Login/>
-                </Route>
-                <Route path="/app">
+                <Route exact path="/static/login/" 
+                    component={withRouter(Login)}/>
+                <Route path="/static/app/">
                     <App />
                 </Route>
             </Switch>
-        </Router>
         </>
     )
 };

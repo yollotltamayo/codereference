@@ -2,6 +2,7 @@
 use serde::{Serialize, Deserialize};
 #[macro_use] extern crate rocket;
 use rocket_contrib::json::Json;
+use rocket_contrib::serve::{StaticFiles, Options};
 use rocket::response::Redirect;
 use mongodb::{bson::doc};
 use rocket::http::{Cookie, Cookies};
@@ -114,7 +115,7 @@ pub mod Oauth {
     }
 #[get("/login/github")]
     fn redirect() -> Redirect{
-        let redir_uri = "http://localhost:8000/api/login/github/callback";
+        let redir_uri = "http://localhost:8000/login/github/callback";
         let redir = format!("https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}", Oauth::CLIENT_ID, redir_uri);
         Redirect::to(redir)
     }
