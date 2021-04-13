@@ -1,30 +1,33 @@
-use mongodb::{bson::doc, error::Error, results::InsertManyResult, Client};
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize)]
+use std::env;
+use mongodb::{bson::doc, options::ClientOptions,sync::Client};
+use serde::{Serialize, Deserialize};
+#[derive(Serialize,Deserialize)]
 pub struct Codigo {
-    pub author: String,
+    pub author: String, 
     pub content: String,
 }
-
 pub struct Bro {
-    pub client: Client,
+    pub client: Client
 }
-
 impl Bro {
-    pub async fn connect() -> Self {
-        let uri = env!("MONGO_URI");
+    //#[tokio::main]
+    //pub async fn connect(&mut self)->mongodb::error::Result<()>{
+    pub fn connect()->Self{
+        let URI = match env::var("MONGO_URI")  {
+            Ok(val) => val,
+            Err(e) => e.to_string()
+        };
 
-        Self {
-            client: Client::with_uri_str(&uri).await.unwrap(),
+        Self{
+            client: Client::with_uri_str(&URI).unwrap()
         }
+        //let collection = db.collection("contenido")
+        //Ok(())
     }
-
-    pub async fn inserta(
-        &self,
-        data: Vec<mongodb::bson::Document>,
-    ) -> Result<InsertManyResult, Error> {
+    pub fn inserta(&self, data:Vec<mongodb::bson::Document>) ->mongodb::error::Result<()> {
         let collection = self.client.database("Reference").collection("contenido");
-        collection.insert_many(data, None).await
+        collection.insert_many(data,None)?;
+        Ok(())
     }
 }
+
