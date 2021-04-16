@@ -8,7 +8,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rocket = { git = "https://github.com/SergioBenitez/Rocket", features = ["secrets"]}
+#rocket = { git = "https://github.com/SergioBenitez/Rocket", features = ["secrets"]}
+rocket = { git = "https://github.com/SergioBenitez/Rocket"}
 rocket_contrib = { git = "https://github.com/SergioBenitez/Rocket", features = ["serve"]}
 serde = {version="1.0.125", features=["derive"]}
 reqwest = { version = "0.11", features = ["json"] }

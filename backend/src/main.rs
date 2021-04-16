@@ -1,5 +1,6 @@
 
-#![feature(decl_macro)]
+//#![feature(decl_macro)]
+#![feature(proc_macro_hygiene, decl_macro)]
 
 mod content;
 
@@ -154,7 +155,7 @@ fn authorize(signal:&str ) -> Result<Redirect,Redirect>{
 }
 #[get("/github")]
 fn redirect() -> Redirect {
-    let redir_uri = "http://localhost:8000/login/github/callback";
+    let redir_uri = env!("REDIR_URI").to_owned() + "/login/github/callback";
 
     let redir = format!(
         "https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}",
@@ -170,7 +171,7 @@ async fn index() -> Option<NamedFile> {
 
 #[rocket::main]
 async fn main() -> Result<(), Error> {
-    rocket::ignite()
+        rocket::build()
         .mount("/",routes![index,authorize])
         .mount("/user",routes![user_data,delete_user])
         .mount("/login", routes![login, redirect])
