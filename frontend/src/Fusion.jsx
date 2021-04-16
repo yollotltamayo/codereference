@@ -1,38 +1,24 @@
 import React from 'react';
 import App from './App'
 import Login from './components/login/login'
+import Home from './Home';
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    withRouter
 } from "react-router-dom";
 
 const Fusion = () =>{
     return (
         <>
-            <Router>
-                {/*<ul>
-                    <li>
-                        <Link to="/login">
-                            Login
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/app">
-                            App
-                        </Link>
-                    </li>
-                </ul>*/}
             <Switch>
-                <Route path="/login">
-                    <Login/>
-                </Route>
-                <Route path="/">
-                    <App />
-                </Route>
+                <Route exact path="/static/login/" 
+                    component={withRouter(Login)}/>
+                <Route path="/"
+                    component={withRouter(Home)}/>
             </Switch>
-        </Router>
         </>
     )
 };

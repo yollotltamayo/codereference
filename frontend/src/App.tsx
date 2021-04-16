@@ -1,14 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { Layout, Menu } from 'antd';
-import { Input, AutoComplete } from 'antd';
+import { Layout } from 'antd';
 import './App.css';
 import Preview from './components/preview/Preview';
 import Navbar from './components/navbar/navbar';
 import Cards from './components/cards/Cards';
 import arr from './arr';
 const { Sider } = Layout;
-function App(props: {count :number}) { 
+function App() { 
     const [list, setList] = React.useState(arr); 
     const [text, setText] = React.useState(""); 
     const [prec, setPrec] = React.useState("");
@@ -28,7 +27,7 @@ function App(props: {count :number}) {
             url:'/api/submit',
             data : {
                 author: "yollotl",
-                content: text
+                content: prec
             }
         }
         );
@@ -47,8 +46,7 @@ function App(props: {count :number}) {
 
     function handleRemove(id:number) {
         const newList = list;
-            newList.splice(id,1);
-            //newList.filter((item) => item.id !== id);
+        newList.splice(id,1);
         setList(newList);
     }
     function handleNewText(newText:string,estado:number) {
