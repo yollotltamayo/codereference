@@ -3,8 +3,8 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 mod content;
-use std::env;
 use std::collections::HashMap;
+use std::env;
 
 use mongodb::bson::doc;
 use reqwest::header::{ACCESS_CONTROL_ALLOW_ORIGIN,AUTHORIZATION, USER_AGENT};
