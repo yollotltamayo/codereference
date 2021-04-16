@@ -1,23 +1,21 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-use serde::{Serialize, Deserialize};
-#[macro_use] extern crate rocket;
-use rocket_contrib::json::Json;
-use rocket_contrib::serve::{StaticFiles, Options};
-use rocket::response::Redirect;
-use mongodb::{bson::doc};
-use rocket::http::{Cookie, Cookies};
+#![feature(decl_macro)]
+
 mod content;
 
 use std::collections::HashMap;
 
 use mongodb::bson::doc;
-use reqwest::header::{AUTHORIZATION, USER_AGENT};
+use reqwest::header::{ACCESS_CONTROL_ALLOW_ORIGIN,AUTHORIZATION, USER_AGENT};
+use serde::{Deserialize, Serialize};
 use rocket::{
     error::Error,
-    http::{Cookie, CookieJar},
-    response::Redirect,
+    http::{Status,Cookie, CookieJar},
+    response::{Redirect,NamedFile},
 };
-use rocket_contrib::json::Json;
+use rocket_contrib::{
+    json::{json,Json,JsonValue},
+    serve::StaticFiles,
+};
 use serde_json::Value;
 
 #[macro_use]
@@ -26,6 +24,7 @@ extern crate rocket;
 pub const CLIENT_ID: &str = env!("CLIENT_ID");
 pub const CLIENT_SECRET: &str = env!("CLIENT_SECRET");
 
+#[derive(Deserialize, Serialize)]
 pub struct UserResponse {
     pub name: String,
     pub user: String,
@@ -64,7 +63,6 @@ pub async fn get_access_token(code: String) -> String {
 
 pub async fn get_github_user(token: &str) -> UserResponse {
     let head = format!(" token {}", token);
-
     let client = reqwest::Client::new();
     let req = client
         .get("https://api.github.com/user")
@@ -76,12 +74,12 @@ pub async fn get_github_user(token: &str) -> UserResponse {
 
     let res = req.text().await.unwrap();
     let data: Value = serde_json::from_str(&res).unwrap();
-
+    println!("{}",data["login"].to_string());
     UserResponse {
         email: data["email"].to_string(),
         user: data["login"].to_string(),
-        name: data["name"].to_string(),
-        avatar: data["avatar"].to_string(),
+        name: data["id"].to_string(),
+        avatar: data["avatar_url"].to_string(),
     }
 }
 
@@ -100,31 +98,84 @@ fn code() -> Json<Vec<content::Codigo>> {
     }])
 }
 
-#[get("/login/github/callback?<code>")]
-async fn login(cookie: &CookieJar<'_>, code: String) -> Json<Vec<content::Codigo>> {
+#[derive(Serialize,Deserialize)]
+struct res {
+    ress: String,
+}
+#[get("/github/callback?<code>")]
+async fn login(cookie: &CookieJar<'_>, code: String) -> Redirect{
     let token = get_access_token(code).await;
     let user_data = get_github_user(&token).await;
 
-    cookie.add_private(Cookie::new("user", user_data.user));
-    cookie.add_private(Cookie::new("email", user_data.email));
-    cookie.add_private(Cookie::new("avatar", user_data.avatar));
-    cookie.add_private(Cookie::new("name", user_data.name));
-
-    Json(vec![content::Codigo {
-        author: "siuuu".to_string(),
-        content: " lml".to_string(),
-    }])
+    cookie.add(Cookie::new("user", user_data.user));
+    cookie.add(Cookie::new("email", user_data.email));
+    cookie.add(Cookie::new("avatar", user_data.avatar));
+    cookie.add(Cookie::new("name", user_data.name));
+    cookie.add(Cookie::new("auth", "correcto"));
+    Redirect::to("/authorize/second")
+}
+#[get("/")] // /user
+async fn user_data(cookie:&CookieJar<'_>) -> Result<JsonValue,Status>{
+    //println!("{}", cookie.get("user").unwrap().value().to_string());
+    match cookie.get("auth")  {
+    Some(_)=> {
+        Ok(json!(UserResponse {
+            email: cookie.get("email").unwrap().value().to_string(),
+            user:  cookie.get("user").unwrap().value().to_string(),
+            name: cookie.get("name").unwrap().value().to_string(),
+            avatar:cookie.get("avatar").unwrap().value().to_string(), 
+        }))
+    },
+    None => Err(Status::Unauthorized)
+    }
+}
+#[get("/delete")] // /user/delete
+async fn delete_user(cookie:&CookieJar<'_>) -> Result<Status,Status>{
+    match cookie.get("auth")  {
+    Some(_)=> {
+        cookie.remove(Cookie::named("email"));
+        cookie.remove(Cookie::named("user"));
+        cookie.remove(Cookie::named("name"));
+        cookie.remove(Cookie::named("avatar"));
+        cookie.remove(Cookie::named("auth"));
+        Ok(Status::Ok)
+    },
+    None => Err(Status::Unauthorized)
+    }
 }
 
-#[get("/login/github")]
-    fn redirect() -> Redirect{
-        let redir_uri = "http://localhost:8000/login/github/callback";
-        let redir = format!("https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}", Oauth::CLIENT_ID, redir_uri);
-        Redirect::to(redir)
+#[get("/authorize/<signal>")]
+fn authorize(signal:&str ) -> Result<Redirect,Redirect>{
+    match signal {
+        "first" => Err(Redirect::to("/login/github/")),
+            _ => Ok(Redirect::to("/")),
     }
-    fn main()  {
-        rocket::ignite()
-            .mount("/",routes![login,redirect])
-            .mount("/api", routes![code,submit])
-            .launch();
-    }
+}
+#[get("/github")]
+fn redirect() -> Redirect {
+    let redir_uri = "http://localhost:8000/login/github/callback";
+
+    let redir = format!(
+        "https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}",
+        CLIENT_ID, redir_uri
+    );
+
+    Redirect::to(redir)
+}
+#[get("/")]
+async fn index() -> Option<NamedFile> {
+    NamedFile::open("build/index.html").await.ok()
+}
+
+#[rocket::main]
+async fn main() -> Result<(), Error> {
+    rocket::ignite()
+        .mount("/",routes![index,authorize])
+        .mount("/user",routes![user_data,delete_user])
+        .mount("/login", routes![login, redirect])
+        .mount("/api", routes![code, submit])
+        .mount("/static", StaticFiles::from("build/static/"))
+        .launch()
+        .await
+}
+
