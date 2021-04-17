@@ -1,6 +1,5 @@
 use mongodb::{bson::doc, error::Error, results::InsertManyResult, Client};
 use serde::{Deserialize, Serialize};
-use std::env;
 #[derive(Serialize, Deserialize)]
 pub struct Codigo {
     pub author: String,
@@ -13,7 +12,7 @@ pub struct Bro {
 
 impl Bro {
     pub async fn connect() -> Self {
-        let uri = std::("MONGO_URI");
+        let uri = std::env::var("MONGO_URI").unwrap();
 
         Self {
             client: Client::with_uri_str(&uri).await.unwrap(),

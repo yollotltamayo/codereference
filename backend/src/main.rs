@@ -1,13 +1,11 @@
 
-//#![feature(decl_macro)]
-#![feature(proc_macro_hygiene, decl_macro)]
+#![feature(decl_macro)]
 
 mod content;
 use std::collections::HashMap;
-use std::env;
 
 use mongodb::bson::doc;
-use reqwest::header::{ACCESS_CONTROL_ALLOW_ORIGIN,AUTHORIZATION, USER_AGENT};
+use reqwest::header::{AUTHORIZATION, USER_AGENT};
 use serde::{Deserialize, Serialize};
 use rocket::{
     error::Error,
@@ -23,8 +21,8 @@ use serde_json::Value;
 #[macro_use]
 extern crate rocket;
 
-pub const CLIENT_ID: &str = std::env("CLIENT_ID");
-pub const CLIENT_SECRET: &str = std::env("CLIENT_SECRET");
+const CLIENT_ID: &str = env!("CLIENT_ID");
+const CLIENT_SECRET: &str = env!("CLIENT_SECRET");
 
 #[derive(Deserialize, Serialize)]
 pub struct UserResponse {
@@ -100,10 +98,10 @@ fn code() -> Json<Vec<content::Codigo>> {
     }])
 }
 
-#[derive(Serialize,Deserialize)]
-struct res {
-    ress: String,
-}
+//#[derive(Serialize,Deserialize)]
+//struct res {
+    //ress: String,
+//}
 #[get("/github/callback?<code>")]
 async fn login(cookie: &CookieJar<'_>, code: String) -> Redirect{
     let token = get_access_token(code).await;
@@ -155,7 +153,7 @@ fn authorize(signal:&str ) -> Result<Redirect,Redirect>{
 }
 #[get("/github")]
 fn redirect() -> Redirect {
-    let redir_uri = std::env("REDIR_URI").to_owned() + "/login/github/callback";
+    let redir_uri = env!("REDIR_URI").to_owned() + "/login/github/callback";
 
     let redir = format!(
         "https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}",
