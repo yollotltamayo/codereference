@@ -1,3 +1,6 @@
 VERSION=nightly
+CLIENT_ID=ca3cac765529f9d577ec
+MONGO_URI=mongodb+srv://yollotl:%23Searsmeentiende2@cluster-1.qo9uf.mongodb.net/Reference?retryWrites=true&w=majority
+REDIR_URI=http://codereference.herokuapp.com/
 
 
