@@ -1,13 +1,10 @@
-
-//#![feature(decl_macro)]
 #![feature(proc_macro_hygiene, decl_macro)]
 
 mod content;
-
 use std::collections::HashMap;
 
 use mongodb::bson::doc;
-use reqwest::header::{ACCESS_CONTROL_ALLOW_ORIGIN,AUTHORIZATION, USER_AGENT};
+use reqwest::header::{AUTHORIZATION, USER_AGENT};
 use serde::{Deserialize, Serialize};
 use rocket::{
     error::Error,
@@ -23,9 +20,6 @@ use serde_json::Value;
 #[macro_use]
 extern crate rocket;
 
-pub const CLIENT_ID: &str = env!("CLIENT_ID");
-pub const CLIENT_SECRET: &str = env!("CLIENT_SECRET");
-
 #[derive(Deserialize, Serialize)]
 pub struct UserResponse {
     pub name: String,
@@ -37,9 +31,12 @@ pub struct UserResponse {
 pub async fn get_access_token(code: String) -> String {
     let client = reqwest::Client::new();
 
+    let client_secret = &get_env("CLIENT_SECRET").unwrap()[..];
+    let client_id = &get_env("CLIENT_ID").unwrap()[..];
+
     let map: HashMap<&str, &str> = [
-        ("client_id", CLIENT_ID),
-        ("client_secret", CLIENT_SECRET),
+        ("client_id", client_id),
+        ("client_secret", client_secret),
         ("code", &code),
     ]
     .iter()
@@ -66,6 +63,7 @@ pub async fn get_access_token(code: String) -> String {
 pub async fn get_github_user(token: &str) -> UserResponse {
     let head = format!(" token {}", token);
     let client = reqwest::Client::new();
+
     let req = client
         .get("https://api.github.com/user")
         .header(AUTHORIZATION, &head)
@@ -100,10 +98,6 @@ fn code() -> Json<Vec<content::Codigo>> {
     }])
 }
 
-#[derive(Serialize,Deserialize)]
-struct res {
-    ress: String,
-}
 #[get("/github/callback?<code>")]
 async fn login(cookie: &CookieJar<'_>, code: String) -> Redirect{
     let token = get_access_token(code).await;
@@ -118,7 +112,6 @@ async fn login(cookie: &CookieJar<'_>, code: String) -> Redirect{
 }
 #[get("/")] // /user
 async fn user_data(cookie:&CookieJar<'_>) -> Result<JsonValue,Status>{
-    //println!("{}", cookie.get("user").unwrap().value().to_string());
     match cookie.get("auth")  {
     Some(_)=> {
         Ok(json!(UserResponse {
@@ -155,16 +148,17 @@ fn authorize(signal:&str ) -> Result<Redirect,Redirect>{
 }
 #[get("/github")]
 fn redirect() -> Redirect {
-    let redir_uri = env!("REDIR_URI").to_owned() + "/login/github/callback";
+    let client_id = get_env("CLIENT_ID").unwrap();
+    let redir_uri = get_env("REDIR_URI").unwrap().to_owned() + "/login/github/callback";
 
     let redir = format!(
         "https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}",
-        CLIENT_ID, redir_uri
+        client_id, redir_uri
     );
 
     Redirect::to(redir)
 }
-#[get("/")]
+#[get("/")] // "/" root itself
 async fn index() -> Option<NamedFile> {
     NamedFile::open("build/index.html").await.ok()
 }
@@ -180,4 +174,9 @@ async fn main() -> Result<(), Error> {
         .launch()
         .await
 }
-
+fn get_env(value:&str) -> Option<String>{
+   match std::env::var(value)   {
+    Ok(  val ) => Some(val) ,
+    Err(_ ) => panic!("{} not found",value)
+   }
+}
