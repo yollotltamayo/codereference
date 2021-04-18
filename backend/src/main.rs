@@ -7,7 +7,6 @@ use mongodb::bson::doc;
 use reqwest::header::{AUTHORIZATION, USER_AGENT};
 use serde::{Deserialize, Serialize};
 use rocket::{
-    error::Error,
     http::{Status,Cookie, CookieJar},
     response::{Redirect,NamedFile},
 };
@@ -162,16 +161,14 @@ async fn index() -> Option<NamedFile> {
     NamedFile::open("build/index.html").await.ok()
 }
 
-#[rocket::main]
-async fn main() -> Result<(), Error> {
+#[launch]
+ fn rocket() -> _ {
         rocket::build()
         .mount("/",routes![index,authorize])
         .mount("/user",routes![user_data,delete_user])
         .mount("/login", routes![login, redirect])
         .mount("/api", routes![code, submit])
         .mount("/static", StaticFiles::from("build/static/"))
-        .launch()
-        .await
 }
 fn get_env(value:&str) -> Option<String>{
    match std::env::var(value)   {
