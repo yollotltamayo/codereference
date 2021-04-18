@@ -13,7 +13,7 @@ const Cards = (props: {id:number, content:string, onRemove:any,onWrite:any, onDi
             {props.content?props.content.substr(0,30)+'...':""}
         </code>
         <Button onClick={ 
-            () =>( props.onRemove(props.id), 
+            () =>( props.onRemove(props.id),
                 props.onWrite(props.content, 0))}
         size ="middle" block ={true} type="dashed"> Agregar</Button>
     <Button onClick={ 

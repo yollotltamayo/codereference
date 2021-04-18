@@ -1,16 +1,15 @@
-import {React, useState} from 'react'
+import {React} from 'react'
 //import './login.css';
-import axios from 'axios';
 const Login = () =>{
-    const [nav, setNav] = useState(false);
-    async function login(){
-        window.location.href = "/authorize/first";
-        // redirect to the API, this way
-        // CORS problems are ignored.
+
+    let login = () => {
+        // por alguna razon no funciona si no hay cookies
+        //
+        window.location.href = "/authorize/first/";
     }
     return (
         <>
-            <button onClick={()=>{login()}}>
+            <button onClick={login}>
                 Login
             </button>
         </>

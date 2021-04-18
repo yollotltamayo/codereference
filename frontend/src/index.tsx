@@ -1,22 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import Login from './App';
 import Fusion from './Fusion';
-import Home from './Home';
+import { createBrowserHistory } from "history";
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    withRouter,
-    HashRouter
+     Router
 } from "react-router-dom";
 
+const appHistory = createBrowserHistory();
 ReactDOM.render(
   <React.StrictMode>
-  <Router>      
+  <Router history={appHistory}>      
       <Fusion/>
   </Router>
   </React.StrictMode>,
