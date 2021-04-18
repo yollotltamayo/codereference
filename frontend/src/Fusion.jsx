@@ -1,12 +1,9 @@
 import React from 'react';
-import App from './App'
 import Login from './components/login/login'
 import Home from './Home';
 import {
-    BrowserRouter as Router,
     Switch,
     Route,
-    Link,
     withRouter
 } from "react-router-dom";
 

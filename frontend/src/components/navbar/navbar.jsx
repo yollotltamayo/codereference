@@ -1,12 +1,8 @@
-import {useContext,React,useEffect,useState} from 'react';
+import {useContext,React} from 'react';
 import {UserContext} from '../../Home';
 import './navbar.css';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
     Link,
-    Redirect
 } from "react-router-dom";
 import axios from 'axios';
 import { Avatar } from 'antd';
@@ -16,8 +12,11 @@ const Navbar = () => {
     const avatar = raw[0];
     var logOut = () => {
         axios.get("/user/delete/")
-            .then( () => {
-                console.log("success");
+            .then( (value) => {
+                if(value.data === "failed"){
+                alert("usuario no existe")
+                window.location.href = "/authorize/first";
+                }
             })
             .catch( () => {
                 alert("usuario no existe")

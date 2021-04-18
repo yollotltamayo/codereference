@@ -2,14 +2,6 @@ import {React,createContext, useEffect,useState} from 'react';
 import axios from 'axios';
 import Login from './components/login/login'
 import App from './App';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    withRouter,
-    HashRouter
-} from "react-router-dom";
 export const UserContext  = createContext("");
 const Home = () => {
 const [loaded , setLoad] = useState(false);
@@ -18,8 +10,12 @@ const [user , setUser] = useState({
     "avatar":"",
 });
     useEffect(()=>{
-        axios.get("/user")
+         axios.get("/user")
             .then( (value) => {
+                console.log(value.data);
+                if(value.data === "false"){
+                    setLoad(false);
+                }else{
                 var avatar = value.data.avatar.split('"').join("");
                 var user = value.data.user.split('"').join("");
                 setUser({
@@ -27,6 +23,7 @@ const [user , setUser] = useState({
                     "avatar":avatar
                 })
                 setLoad(true);
+                }
             })
             .catch( () => {
                 setLoad(false);
