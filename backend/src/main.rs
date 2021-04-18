@@ -74,7 +74,6 @@ pub async fn get_github_user(token: &str) -> UserResponse {
 
     let res = req.text().await.unwrap();
     let data: Value = serde_json::from_str(&res).unwrap();
-    println!("{}",data["login"].to_string());
     UserResponse {
         email: data["email"].to_string(),
         user: data["login"].to_string(),
@@ -111,7 +110,7 @@ async fn login(cookie: &CookieJar<'_>, code: String) -> Redirect{
     Redirect::to("/authorize/second")
 }
 #[get("/")] // /user
-async fn user_data(cookie:&CookieJar<'_>) -> Result<JsonValue,Status>{
+fn user_data(cookie:&CookieJar<'_>) -> Result<JsonValue,String>{
     match cookie.get("auth")  {
     Some(_)=> {
         Ok(json!(UserResponse {
@@ -121,11 +120,11 @@ async fn user_data(cookie:&CookieJar<'_>) -> Result<JsonValue,Status>{
             avatar:cookie.get("avatar").unwrap().value().to_string(), 
         }))
     },
-    None => Err(Status::Unauthorized)
+        None => Err("failed".to_string())
     }
 }
 #[get("/delete")] // /user/delete
-async fn delete_user(cookie:&CookieJar<'_>) -> Result<Status,Status>{
+async fn delete_user(cookie:&CookieJar<'_>) -> Result<Status,String>{
     match cookie.get("auth")  {
     Some(_)=> {
         cookie.remove(Cookie::named("email"));
@@ -135,14 +134,14 @@ async fn delete_user(cookie:&CookieJar<'_>) -> Result<Status,Status>{
         cookie.remove(Cookie::named("auth"));
         Ok(Status::Ok)
     },
-    None => Err(Status::Unauthorized)
+    None => Err("failed".to_string())
     }
 }
 
 #[get("/authorize/<signal>")]
 fn authorize(signal:&str ) -> Result<Redirect,Redirect>{
     match signal {
-        "first" => Err(Redirect::to("/login/github/")),
+        "first" => Err(Redirect::to("/login/github/")) ,
             _ => Ok(Redirect::to("/")),
     }
 }
