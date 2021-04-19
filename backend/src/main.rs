@@ -148,7 +148,7 @@ fn authorize(signal:&str ) -> Result<Redirect,Redirect>{
 fn redirect() -> Redirect {
     let client_id = get_env("CLIENT_ID").unwrap();
     let redir_uri = get_env("REDIR_URI").unwrap().to_owned() + "/login/github/callback";
-
+    println!("{}", redir_uri);
     let redir = format!(
         "https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}",
         client_id, redir_uri
