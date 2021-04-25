@@ -88,8 +88,14 @@ async fn submit(codigo: Json<content::Codigo>) {
     let docs = vec![doc! {"sku":"12", "autor":"yollotl" ,"codigo":&codigo.content}];
     let _ = conexion.await.inserta(docs).await;
 }
+#[get("/find/<query>")]
+async fn find( query : String ) ->  JsonValue {
+   let conexion = content::Bro::connect();  
+   let data : Vec<content::Codigo>= conexion.await.busca(query).await;
+   json!(data)
+}
 
-#[get("/")]
+#[get("/yo")]
 fn code() -> Json<Vec<content::Codigo>> {
     Json(vec![content::Codigo {
         author: "yo mero".to_string(),
@@ -97,7 +103,7 @@ fn code() -> Json<Vec<content::Codigo>> {
     }])
 }
 
-#[get("/github/callback?<code>")]
+#[get("/github/callback?<code>")] // rutas 
 async fn login(cookie: &CookieJar<'_>, code: String) -> Redirect{
     let token = get_access_token(code).await;
     let user_data = get_github_user(&token).await;
@@ -160,15 +166,25 @@ fn redirect() -> Redirect {
 #[get("/")] // "/" root itself
 async fn index() -> Option<NamedFile> {
     NamedFile::open("build/index.html").await.ok()
+    //NamedFile::open("out/index.html").await.ok()
+}
+#[get("/posts/first-post")] // "/" root itself
+async fn first() -> Option<NamedFile> {
+    //NamedFile::open("build/index.html").await.ok()
+    NamedFile::open("out/posts/first-post.html").await.ok()
 }
 
 #[rocket::main]
 async fn main() -> Result<(), Error> {
         rocket::build()
-        .mount("/",routes![index,authorize])
+        .mount("/",routes![first,index,authorize])
+        //.mount("/",StaticFiles::from("out/").rank(2))
         .mount("/user",routes![user_data,delete_user])
         .mount("/login", routes![login, redirect])
         .mount("/api", routes![code, submit])
+        .mount("/search", routes![find])
+        //.mount("/_next/static/chunks", StaticFiles::from("out/_next/static/chunks"))
+        .mount("/_next", StaticFiles::from("out/_next"))
         .mount("/static", StaticFiles::from("build/static/"))
         .launch()
         .await
