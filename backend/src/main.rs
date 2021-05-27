@@ -26,6 +26,7 @@ pub struct UserResponse {
     pub user: String,
     pub email: String,
     pub avatar: String,
+    pub status: String,
 }
 
 pub async fn get_access_token(code: String) -> String {
@@ -79,6 +80,7 @@ pub async fn get_github_user(token: &str) -> UserResponse {
         user: data["login"].to_string(),
         name: data["id"].to_string(),
         avatar: data["avatar_url"].to_string(),
+        status : "accepted".to_string(),
     }
 }
 
@@ -113,10 +115,19 @@ async fn login(cookie: &CookieJar<'_>, code: String) -> Redirect{
     cookie.add(Cookie::new("avatar", user_data.avatar));
     cookie.add(Cookie::new("name", user_data.name));
     cookie.add(Cookie::new("auth", "correcto"));
-    Redirect::to("/authorize/second")
+    Redirect::to("/board")
+}
+#[get("/")] // "/" root itself
+async fn login_serve() -> Option<NamedFile> {
+    NamedFile::open("out/login.html").await.ok()
+}
+
+#[get("/board")]
+async fn board() -> Option<NamedFile> {
+    NamedFile::open("out/board.html").await.ok()
 }
 #[get("/")] // /user
-fn user_data(cookie:&CookieJar<'_>) -> Result<JsonValue,String>{
+fn user_data(cookie:&CookieJar<'_>) -> Result<JsonValue,JsonValue>{
     match cookie.get("auth")  {
     Some(_)=> {
         Ok(json!(UserResponse {
@@ -124,9 +135,14 @@ fn user_data(cookie:&CookieJar<'_>) -> Result<JsonValue,String>{
             user:  cookie.get("user").unwrap().value().to_string(),
             name: cookie.get("name").unwrap().value().to_string(),
             avatar:cookie.get("avatar").unwrap().value().to_string(), 
+            status: "accepted".to_string(),
         }))
     },
-        None => Err("failed".to_string())
+    None => Err(
+        json!({
+            "status":"failed",
+        })
+        )
     }
 }
 #[get("/delete")] // /user/delete
@@ -140,7 +156,7 @@ async fn delete_user(cookie:&CookieJar<'_>) -> Result<Status,String>{
         cookie.remove(Cookie::named("auth"));
         Ok(Status::Ok)
     },
-    None => Err("failed".to_string())
+        None => Err("failed".to_string())
     }
 }
 
@@ -165,8 +181,8 @@ fn redirect() -> Redirect {
 }
 #[get("/")] // "/" root itself
 async fn index() -> Option<NamedFile> {
-    NamedFile::open("build/index.html").await.ok()
-    //NamedFile::open("out/index.html").await.ok()
+    //NamedFile::open("build/index.html").await.ok()
+    NamedFile::open("out/index.html").await.ok()
 }
 #[get("/posts/first-post")] // "/" root itself
 async fn first() -> Option<NamedFile> {
@@ -177,10 +193,10 @@ async fn first() -> Option<NamedFile> {
 #[rocket::main]
 async fn main() -> Result<(), Error> {
         rocket::build()
-        .mount("/",routes![first,index,authorize])
-        //.mount("/",StaticFiles::from("out/").rank(2))
+        .mount("/",routes![board,first,index,authorize])
+        .mount("/",StaticFiles::from("out/").rank(2))
         .mount("/user",routes![user_data,delete_user])
-        .mount("/login", routes![login, redirect])
+        .mount("/login", routes![login_serve,login, redirect])
         .mount("/api", routes![code, submit])
         .mount("/search", routes![find])
         //.mount("/_next/static/chunks", StaticFiles::from("out/_next/static/chunks"))
