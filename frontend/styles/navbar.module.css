@@ -1,35 +1,42 @@
-header {
-    position:sticky;
-    top:0;
+.input { 
+    color:#000;
 }
-#navbar {
+.header {
+}
+.navbar {
     background-color:#001529;
     color:#fff;
+    opacity:0;
 }
-#navbar > ul{
+.navbar > ul{
     background-color:#001529;
     list-style:none;
     display:flex;
     justify-content:space-around;
     margin:0;
     align-items:center;
-    padding: 1rem 3rem;
+    padding: 0 3rem;
+    transition: opacity .2s ease-out;
 }
-#navbar >ul> li{
+.navbar >ul> li{
     background-color:#001529;
-    font-size:2rem;
+    /*font-size:2rem;*/
 }
-#navbar >ul>li:nth-child(4) {
+.navbar >ul>li:nth-child(4) {
     border: 2px #fff dashed;
     padding: 0 10px;
     transition:0.5s;
     border-radius:2%;
 }
-#navbar >ul>li:nth-child(4):hover {
+.navbar >ul>li:nth-child(4):hover {
     border: 2px #339DFF dashed;
     background-color:#339DFF;
     padding: 0 10px;
 
+}
+.navbar:hover {
+    opacity:1;
+    transition: opacity .2s ease-out;
 }
 
 

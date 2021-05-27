@@ -1,0 +1,30 @@
+.grid {
+    display:grid;
+    flex-direction:row;
+    flex-wrap:wrap;
+    display: inline-grid;
+    grid-template-columns:  auto auto;
+    height:500px;
+    overflow-y:scroll;
+}
+
+.grid > .ant-card {
+
+}
+.pagination {
+    text-align:center;
+    color:#fff !important;
+}
+.pagination > li{
+    text-align:center;
+    color:#fff !important;
+}
+.pagination >  li > input {
+    background-color:#001529 !important;
+    border-color:#001529!important;
+}
+@media only screen and (max-width: 962px) {
+    .grid {
+        grid-template-columns:   auto;
+    }
+}

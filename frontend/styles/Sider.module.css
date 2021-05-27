@@ -1,0 +1,62 @@
+ @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+.Sider {
+    position:sticky;
+    top:20vh;
+    align-self:flex-start;
+    background:white;
+    width:5rem;
+    font-family: 'Open Sans', sans-serif;
+    font-size:16px;
+    display:flex;
+    padding:0;
+    margin:0;
+    height:300px;
+    align-items:center;
+    border-radius: 25px;
+    background-color:#001529;
+    margin-top:20vh;
+}
+.Sider > ul > li {
+    margin:0;
+    padding:0;
+}
+
+.Sider > ul {
+    list-style: none;
+    padding:0;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
+    height:100%;
+}
+.Sider > ul > li > svg  {
+     width: 2rem;
+  min-width: 2rem;
+  margin: 0 1.5rem;
+  color:#e37168;
+  color:#3f667a;
+}
+.Sider > ul > li > svg > a {
+  color:#3f667a;
+  
+  transition:0.3s;
+}
+.Sider > ul > li > svg > a :hover {
+    color:#1890ff;
+}
+/*.Sider-text {*/
+    /*display:none;*/
+    /*margin-left:1rem;*/
+/*}*/
+/*.Sider_link {*/
+    /*display:flex;*/
+    /*height:5rem;*/
+    /*text-decoration:none;*/
+/*}*/
+/*.Sider:hover {*/
+    /*width:20rem;*/
+/*}*/
+/*.Sider:hover .Sider_link {*/
+    /*display:block;*/
+/*}*/

@@ -1,0 +1,107 @@
+/*@import '~antd/dist/antd.css';*/
+.App {
+  text-align: center;
+  background-color: #EFF0F0;
+}
+/*.body {*/
+    /*background-color: #EFF0F0;*/
+/*}*/
+
+.barra{
+    max-width: 300px !important;
+    width: 300px!important;
+}
+
+.main {
+    /*margin-left:300px;*/
+    min-width: 100px !important;
+}
+@media only screen and (max-width: 600px) {
+    .barra{
+        max-width: 200px !important;
+        width: 200px !important;
+        min-width: 100px !important;
+    }
+    .buscar{
+        width:200px;
+    }
+    /*.main {*/
+        /*margin-left: 200px; }*/
+}
+
+@media only screen and (max-width: 450px) {
+    .barra{
+        max-width: 150px !important;
+        width: 150px !important;
+        min-width: 150px !important;
+    }
+    .buscar{
+        width:150px;
+    }
+    .main {
+        /*margin-left: 150px;*/
+    }
+}
+.logo {
+  height: 32px;
+  margin: 10px;
+  margin-left:0px;
+  justify-align:center;
+  /*widht:10px;*/
+  /*background: rgba(255, 255, 255, 0.2);*/
+  /*margin: 16px;*/
+}
+
+.site-layout-sub-header-background {
+  background: #fff;
+}
+
+.site-layout-background {
+  background: #fff;
+}
+.ant-menu-item:hover{
+    background-color:transparent!important;
+}
+.ant-menu-item-selected{
+    background-color:transparent!important;
+}
+.banner_vacio {
+  text-align: center;
+  color:#fff;
+}
+.lista {
+    display:flex;
+    flex-direction:row;
+    overflow-x: scroll;
+    /*overflow-y: auto;*/
+    /*transform: rotate(-90deg);*/
+  /*-webkit-overflow-scrolling: touch;*/
+    /*transform-origin: left top;*/
+      /*[>transform:rotate(-90deg) translateY(-100px);<]*/
+    /*[>overflow-y: auto;<]*/
+    /*[>overflow-x: hidden;<]*/
+    /*[>width: 100px;<]*/
+    /*[>height: 300px;<]*/
+    /*[>transform:rotate(-90deg) translateY(-100px);<]*/
+    /*[>transform-origin: right top;<]*/
+
+}
+.lista > .card {
+    flex : 0 0 auto;
+      /*transform: rotate(90deg);*/
+      /*width: 1fr;*/
+    /*transform: rotate(90deg);*/
+  /*transform-origin: right top*/
+  /*width: 100px;*/
+  /*height: 100px;*/
+  /*transform: rotate(90deg);*/
+  /*transform-origin: right top;*/
+
+}
+.avatar {
+    position:absolute;
+    top:0;
+    left:0;
+    margin-left:1.5rem;
+    padding-top:1rem;
+}

@@ -1,0 +1,63 @@
+/*:root {*/
+    /*--padding-login:100px 100px;    */
+/*}*/
+ @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@1,200&display=swap');
+
+.grid {
+    height:100vh;
+    display:grid;
+    place-items:center;
+    font-family: 'Fira Sans', sans-serif;
+}
+.loginBox {
+    background-color:#151a21;
+    /*padding:var(--padding-login);*/
+    padding: 100px 100px;
+    color:#fff;
+    border-radius:8px;
+}
+.loginBox > h1{
+    color:#fff;
+}
+ .loginButton {
+    all:unset;
+    display:flex;
+    align-items:center;
+    background-color: #242c37;
+
+    width:100%;
+ }
+
+.gridButton {
+    display:grid;
+    margin: 0 10px;
+    font-size:2vh;
+    width:100%;
+    grid-template-columns: 1fr auto 1fr;
+    place-items:center;
+    gap: 20px;
+}
+.bar {
+
+    width:10px;
+    height:200px;
+    background-color:white;
+    /*animation:shine 5s infinite;*/
+    transform: rotate(-45deg);
+}
+.wrapper {
+   animation: shine 5s infinite;
+    position:absolute;
+    top:0;
+    left:0;
+    position:fixed;
+
+}
+@keyframes shine {
+    0% {
+        transform: translatex(0) translatey(0)
+    }
+    100% {
+        transform: translatex(100vw) translateY(100vh) ;
+    }
+}

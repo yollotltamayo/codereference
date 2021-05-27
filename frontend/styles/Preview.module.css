@@ -1,0 +1,110 @@
+.container {
+    display:flex;
+    /*border: 10px #000 dashed;*/
+    /*grid-template-areas:*/
+    /*' Preview Real';*/
+    flex-direction:row;
+    padding:0;
+    margin:10px 10px;
+    height:100%!important;
+      /*grid-template-columns: 1fr 1fr;*/
+    justify-content:space-evenly;
+    background-color:transparent;
+}
+.area1 {
+
+    /*background: #EFF0F0;*/
+    min-width: 200px;
+    /*width: 400px;*/
+    width:100%;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+.markdown {
+    background:  #404d5a;
+    background:  #282c34;
+    background:  #0d1117;
+    background:  #fff;
+    min-width: 200px;
+    width: 400px;
+    /*border:1px solid #c0c0c0;*/
+    border-radius:6px;
+    width:100%;
+    box-sizing: border-box;
+    flex-grow: 1;
+    padding-left:10px;
+    padding-right:10px;
+    scroll-behavior:smooth;
+    overflow:auto;
+    border-top-left-radius:0px;
+}
+.react-codemirror2{
+    /*height:80vh!important;*/
+}
+.Handler {
+    cursor: ew-resize;
+    width: 10px;
+    height: 100px;
+    margin: 0px -5px;
+    background: lightblue;
+    border: 2px solid gray;
+    border-radius: 2px;
+    text-align: center;
+    z-index: 99999;
+    overflow: hidden;
+    display: flex;
+    align-items: center ;
+}
+.optionBar {
+    display:flex;
+    flex-direction: row;
+}
+.optionBar > button{
+   all : unset; 
+   padding: 0 10px;
+   margin: 5px;
+}
+.optionBar > select{
+   all : unset; 
+   padding: 10px;
+}
+@media only screen and (max-width:800px){
+    .react-codemirror2{
+        height:40vh!important;
+    }
+    .container{
+        flex-direction:column;
+        justify-content:space-between;
+        height:100%;
+    }
+    .area1 {
+        min-height: 200px;
+        height: 100px;
+        height:100%;
+        box-sizing: border-box;
+        flex-grow: 1;
+    }
+}
+
+.tabs > button{
+    all:unset;
+    border-bottom-color:white;
+    border-bottom-left-radius:0px;
+    background-color:white;
+    padding:5px 12px;
+    border-radius: 0.9px;
+    margin-right:2px;
+}
+.tabs > button:hover{
+    color:#000;
+    border-bottom-color:white;
+}
+.tabsDisabled {
+    background-color:#D0D0D0!important;
+}
+.tabsDisabled :hover{
+    background-color:#D0D0FA!important;
+}
+.divPreview {
+    width:100%;
+}
